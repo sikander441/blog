@@ -5,20 +5,42 @@
   <meta charset="utf-8" />
   <link href="css/index.css" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function(){
+    $('.sidenav').sidenav();
+  });
+    document.addEventListener("DOMContentLoaded", function(){
+	$('.preloader-background').delay(1700).fadeOut('slow');
+	
+	$('.preloader-wrapper')
+		.delay(1700)
+		.fadeOut();
+});
+  </script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <title>Best Website</title>
   <meta name="HandheldFriendly" content="True" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <link rel="stylesheet" href="/css/main.min.css">
 </head>
 <body>
-<div class="progress">
-  <div class="indeterminate"></div>
+  <div class="preloader-background">
+	<div class="preloader-wrapper big active">
+		<div class="spinner-layer spinner-blue-only">
+			<div class="circle-clipper left">
+				<div class="circle"></div>
+			</div>
+			<div class="gap-patch">
+				<div class="circle"></div>
+			</div>
+			<div class="circle-clipper right">
+				<div class="circle"></div>
+			</div>
+		</div>
+	</div>
 </div>
 {{> nav}}
-
 {{{body}}}
 
 </body>
