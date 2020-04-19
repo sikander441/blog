@@ -18,23 +18,22 @@ app.engine( 'hbs', hbs( {
 
 app.get('/',async (req,res) =>{
     blogPosts = JSON.parse(fs.readFileSync('blogs.json'))
-
-    console.log(blogPosts)
     res.render('home',{
         blogPosts:blogPosts
     });
 })
 app.get('/blog/create',(req,res) => {
-
-    res.render('newBlog')
+    var blogPosts = JSON.parse(fs.readFileSync('blogs.json')) 
+    const blog = blogPosts.find( (blog) => blog._id==req.query._id)
+    res.render('newBlog',{blog:blog})
 
 })
 app.post('/blog/post',(req,res) => {
     const title = req.body.title
     const body = req.body.body
-    const id = req.body._id;
+    const id = req.body.blogId;
+    var blogPosts = JSON.parse(fs.readFileSync('blogs.json')) 
     if(!id){
-        var blogPosts = JSON.parse(fs.readFileSync('blogs.json')) 
         var _id = blogPosts.length+1
         const blog ={
             body,
@@ -44,16 +43,22 @@ app.post('/blog/post',(req,res) => {
         }
         blogPosts.push(blog)
         fs.writeFileSync('blogs.json',JSON.stringify(blogPosts))
-        res.send(blogPosts)
+        res.redirect('/')
 
+    }
+    else{
+            const index = blogPosts.findIndex( (blog) => blog._id == id)
+            blogPosts[index].body = body;
+            blogPosts[index].title = title
+            blogPosts[index].editedAt = new Date().toISOString().slice(0,10)
+            fs.writeFileSync('blogs.json',JSON.stringify(blogPosts))
+            res.redirect('/')
     }
 
 })
-app.get('/blog/:id',(req,res) => {
-
+app.get('/blog/view/:id',(req,res) => {
     var blogPosts = JSON.parse(fs.readFileSync('blogs.json')) 
     const blog = blogPosts.find( (blog) => blog._id==req.params.id)
-    console.log(blog)
     res.render('blog',{
         blog:blog
     });

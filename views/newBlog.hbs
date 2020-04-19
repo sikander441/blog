@@ -23,6 +23,8 @@ $(document).ready(function(){
     var html = $.parseHTML($('#inputTitle').val())
     $('h3').html(html)
   });
+   $("#inputBody").trigger( 'input' );
+   $("#inputTitle").trigger('input')
 });
 </script>
  <link
@@ -36,12 +38,14 @@ $(document).ready(function(){
 
       <form method="POST" action="/blog/post">
         Title Goes here
-        <textarea name="title" id="inputTitle" cols="25" rows="20"></textarea>
+        <textarea name="title" id="inputTitle" cols="25" rows="20">{{blog.title}}</textarea>
         Body HTML  goes here<br>
-        <textarea name="body" id="inputBody" cols="25" rows="20"></textarea>
-                 <input type="submit" value="Submit">
-
-        </form>
+        <textarea name="body" id="inputBody" cols="25" rows="20">{{blog.body}}</textarea>
+        <input type="submit" value="Submit">
+        {{#if blog._id}}
+          <input type="text" id="ss" name="blogId" value="{{blog._id}}" hidden>
+        {{/if}}
+      </form>
     </div>
     <div class="col s6 blog container">
         <h3 class="center"></h3>

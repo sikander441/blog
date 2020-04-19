@@ -3,7 +3,8 @@
 
               <div class="col s12 m8 z-depth-1" id='blogPosts'>
                 {{#each blogPosts}}
-                <a class="section hoverable waves-effect waves-red" href="blog/{{_id}}">
+               <a class="right" href="/blog/create?_id={{_id}}">Edit</a>
+                <a class="section hoverable waves-effect waves-red" href="blog/view/{{_id}}">
                     <h5>
                        {{title}}
                     </h5>
