@@ -43,9 +43,9 @@ $(document).ready(function(){
         <textarea name="body" id="inputBody" cols="25" rows="20">{{blog.body}}</textarea>
         <input type="submit" value="Submit">
         {{#if blog._id}}
-          <input type="text" id="ss" name="blogId" value="{{blog._id}}" hidden>
+        <input type="text" id="blogId" name="blogId" value="{{blog._id}}" hidden>
         {{/if}}
-      </form>
+        </form>
     </div>
     <div class="col s6 blog container">
         <h3 class="center"></h3>
