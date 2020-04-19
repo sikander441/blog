@@ -46,7 +46,18 @@
 #blogPosts{
     margin-top:20px;
     padding:20px;
+    margin-bottom:20px;
 
+}
+
+#blogPosts > .section{
+    padding:20px;
+}
+ 
+#blogPosts > a{
+    color:inherit; 
+    display:block;
+    text-decoration:none
 }
 .blog{
     margin-top:20px;
@@ -73,4 +84,17 @@
     .navbar-fixed .nav-wrapper .notification-icon{
         font-size:38px;
     }
+}
+
+@media only screen and (max-width: 600px){
+    #blogPosts{
+        margin-top:20px;
+        padding:20px;
+        margin-bottom:20px;
+        margin-left:20px;
+        margin-right: 20px;
+        width:auto;
+    
+    }
+
 }

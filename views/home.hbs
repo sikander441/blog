@@ -1,20 +1,21 @@
  <div class="row">
-              <div class="col s2"></div>
+              <div class="col s0 m2 blue"></div>
 
-              <div class="col s8 z-depth-1" id='blogPosts'>
+              <div class="col s12 m8 z-depth-1" id='blogPosts'>
                 {{#each blogPosts}}
-                <div class="section ">
-                    <h4>
+                <a class="section hoverable waves-effect waves-red" href="blog/{{_id}}">
+                    <h5>
                        {{title}}
-                    </h4>
+                    </h5>
                     <span><b>Created on: </b> <i>{{createdAt}}</i></span>
                     <span> &nbsp; | <b>&nbsp;Edited on: </b><i>{{editedAt}}</i></span>
                     <div class="divider"></div><br>
-                    <p class="blog-summary ">
-                       {{blogSummary}}<a href="/blog/{{id}}">Click to read more.</a>
-                    </p>    
-                </div>
+                    <p class="blog-summary">
+                       {{blogSummary}}
+                    </p>   
+                </a>
                 {{/each}}
-              
-              <div class="col s2"></div>
-  </div>
+             </div>
+             <div class="col s0 m2 blue"></div>
+
+</div>
