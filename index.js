@@ -1,14 +1,20 @@
+require('dotenv').config()
 const express = require('express')
 const app = express();
 const path = require('path')
 var hbs = require('express-handlebars');
 const fs = require('fs')
+const db = require('./db')
+const blogPostModel = require('./src/models/blog')
+
+
+ db.conn().then(()=> console.log('Connected')).catch((err)=> console.log('Something went wrong: '+err.message))
+
 app.set('view engine', 'hbs');
 var myParser = require("body-parser");
 app.use(express.static(path.join(__dirname, '/public')));
 
 const PORT = process.env.PORT || 3000
-
 app.engine( 'hbs', hbs( {
     extname: 'hbs',
     partialsDir: __dirname + '/views/partials/'
@@ -17,51 +23,51 @@ app.engine( 'hbs', hbs( {
   app.use(myParser.urlencoded({extended : true}));
 
 app.get('/',async (req,res) =>{
-    blogPosts = JSON.parse(fs.readFileSync('blogs.json'))
+    blogPosts = await blogPostModel.find({}).lean()
+    blogPosts = blogPosts.map( (blog) => {
+        blog.updatedAt = blog.updatedAt.toDateString()
+        blog.createdAt = blog.createdAt.toDateString()
+        return blog
+    })
     res.render('home',{
         blogPosts:blogPosts
     });
 })
-app.get('/blog/create',(req,res) => {
-    var blogPosts = JSON.parse(fs.readFileSync('blogs.json')) 
-    const blog = blogPosts.find( (blog) => blog._id==req.query._id)
+app.get('/blog/create',async (req,res) => {
+    const _id = req.query._id
+    const blog = await blogPostModel.findById(_id).lean()
     res.render('newBlog',{blog:blog})
 
 })
-app.post('/blog/post',(req,res) => {
+app.post('/blog/post',async (req,res) => {
+    const _id = req.body.blogId
     const title = req.body.title
     const body = req.body.body
-    const id = req.body.blogId;
-    const summary = req.body.summary;
-    var blogPosts = JSON.parse(fs.readFileSync('blogs.json')) 
-    if(!id){
-        var _id = blogPosts.length+1
-        const blog ={
-            body,
-            title,
-            _id,
-            blogSummary:summary,
-            createdAt:new Date().toISOString().slice(0,10)
-        }
-        blogPosts.push(blog)
-        fs.writeFileSync('blogs.json',JSON.stringify(blogPosts))
-        res.redirect('/')
-
+    const blogSummary = req.body.summary;
+    if(_id){
+        var blog = await blogPostModel.findById(_id)
+        blog.title = title
+        blog.body = body
+        blog.blogSummary = blogSummary
+        blog = await blog.save()
     }
     else{
-            const index = blogPosts.findIndex( (blog) => blog._id == id)
-            blogPosts[index].body = body;
-            blogPosts[index].title = title
-            blogPosts[index].blogSummary = summary;
-            blogPosts[index].editedAt = new Date().toISOString().slice(0,10)
-            fs.writeFileSync('blogs.json',JSON.stringify(blogPosts))
-            res.redirect('/')
+        const blog = {
+            title,
+            body,
+            blogSummary
+        }
+        var newBlog = new blogPostModel(blog)
+        var newBlog = await newBlog.save()
     }
 
+    res.redirect('/')
+
 })
-app.get('/blog/view/:id',(req,res) => {
-    var blogPosts = JSON.parse(fs.readFileSync('blogs.json')) 
-    const blog = blogPosts.find( (blog) => blog._id==req.params.id)
+app.get('/blog/view/:id',async (req,res) => {
+    
+    const _id = req.params.id
+    const blog = await blogPostModel.findById(_id).lean()
     res.render('blog',{
         blog:blog
     });
