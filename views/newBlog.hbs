@@ -8,16 +8,19 @@ height: auto;
     .mainContent{
 
     font-family: 'Raleway', sans-serif;
+    font-size:18px;
 }
 h3{
     font-family:'Roboto';
 }
+
 </style>
 <script>
 $(document).ready(function(){
   $("#inputBody").on('input',function(){
     var html = $.parseHTML($('#inputBody').val())
     $('.preview').html(html)
+    Prism.highlightAll();
   });
    $("#inputTitle").on('input',function(){
     var html = $.parseHTML($('#inputTitle').val())
@@ -27,29 +30,27 @@ $(document).ready(function(){
    $("#inputTitle").trigger('input')
 });
 </script>
- <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"
-/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script>
+ <link rel="stylesheet" href="/css/prism.css" />
+  <script src="/js/prism.js"></script>
+
 
 <div class="row">
     <div class="col s6">
-
       <form method="POST" action="/blog/post">
         Title Goes here
         <textarea name="title" id="inputTitle" cols="25" rows="20">{{blog.title}}</textarea>
         Body HTML  goes here<br>
         <textarea name="body" id="inputBody" cols="25" rows="20">{{blog.body}}</textarea>
+        <textarea name="summary" id="summary" cols="25" rows="5">{{blog.blogSummary}}</textarea>
         <input type="submit" value="Submit">
         {{#if blog._id}}
-        <input type="text" id="blogId" name="blogId" value="{{blog._id}}" hidden>
+        <input type="text" id="blogId" name="blogId" value="{{blog._id}}" hidden >
         {{/if}}
         </form>
     </div>
     <div class="col s6 blog container">
         <h3 class="center"></h3>
-        <div class="container preview mainContent flow-text" >
+        <div class="container preview mainContent" >
             
         </div>
     </div>

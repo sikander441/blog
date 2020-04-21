@@ -32,6 +32,7 @@ app.post('/blog/post',(req,res) => {
     const title = req.body.title
     const body = req.body.body
     const id = req.body.blogId;
+    const summary = req.body.summary;
     var blogPosts = JSON.parse(fs.readFileSync('blogs.json')) 
     if(!id){
         var _id = blogPosts.length+1
@@ -39,6 +40,7 @@ app.post('/blog/post',(req,res) => {
             body,
             title,
             _id,
+            blogSummary:summary,
             createdAt:new Date().toISOString().slice(0,10)
         }
         blogPosts.push(blog)
@@ -50,6 +52,7 @@ app.post('/blog/post',(req,res) => {
             const index = blogPosts.findIndex( (blog) => blog._id == id)
             blogPosts[index].body = body;
             blogPosts[index].title = title
+            blogPosts[index].blogSummary = summary;
             blogPosts[index].editedAt = new Date().toISOString().slice(0,10)
             fs.writeFileSync('blogs.json',JSON.stringify(blogPosts))
             res.redirect('/')
