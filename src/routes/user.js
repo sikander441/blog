@@ -5,7 +5,24 @@ const express = require("express");
 const router = express.Router();
 
 
+
 router.get('/login',async (req,res) =>{
+  let email = req.query.email;
+  let password = req.query.password
+  if(!email || !password) return res.status(400).send("Provide info")
+  let user = await userModel.findOne({ email: req.query.email });
+  if (!user) return res.status(400).send("No Such user found");
+  if(bcrypt.compareSync(password, user.password))
+  {
+    const token = user.generateAuthToken();
+      let options = {
+        maxAge: 1000 * 60 * 300, // would expire after 300 minutes
+        httpOnly: true, // The cookie only accessible by the web server
+    }
+    res.cookie('token',token,options).redirect('/blog/admin/')
+  }
+  else
+   res.status(400).send('failed')
 
 })
 router.get("/current", auth, async (req, res) => {
@@ -13,29 +30,5 @@ router.get("/current", auth, async (req, res) => {
     const user = await userModel.findById(req.user._id).select("-password");
     res.send(user);
   });
-
-router.post("/register", async (req, res) => {
-    console.log(req.body.email)
-    console.log(req.body.name)
-    console.log(req.body.password)
-    let user = await userModel.findOne({ email: req.body.email });
-    if (user) return res.status(400).send("User already registered.");
-  
-    user = new userModel({
-      name: req.body.name,
-      password: req.body.password,
-      email: req.body.email
-    });
-    user.password = await bcrypt.hash(user.password, 10);
-    await user.save();
-  
-    const token = user.generateAuthToken();
-    res.header("x-auth-token", token).send({
-      _id: user._id,
-      name: user.name,
-      email: user.email
-    });
-  });
-  
 
   module.exports = router;

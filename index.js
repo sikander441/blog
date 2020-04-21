@@ -3,13 +3,16 @@ const express = require('express')
 const app = express();
 const path = require('path')
 var myParser = require("body-parser");
+var cookieParser = require('cookie-parser'); 
 var hbs = require('express-handlebars');
 const fs = require('fs')
 const db = require('./db')
 const usersRoute = require("./src/routes/user");
 const blogRoute = require('./src/routes/blog')
 
+
 app.set('view engine', 'hbs');
+app.use(cookieParser())
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(myParser.urlencoded({extended : true}));
 
